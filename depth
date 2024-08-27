@@ -1,5 +1,4 @@
-#include<stdio.h>
-  
+#include <stdio.h>
 #include <stdlib.h>
 
 // Define the structure for a tree node
@@ -18,18 +17,26 @@ Node* createNode(int data) {
     return newNode;
 }
 
-// Function to count the total number of nodes in the binary tree
-int countNodes(Node* root) {
-    // Base case: if the root is NULL, return 0
+// Function to find the depth of a specific node
+int findDepth(Node* root, int value, int currentDepth) {
+    // Base case: if the root is NULL, return -1 (node not found)
     if (root == NULL) {
-        return 0;
+        return -1;
     }
     
-    // Count the nodes in the left and right subtrees and add 1 for the current node
-    int leftCount = countNodes(root->left);
-    int rightCount = countNodes(root->right);
+    // Check if the current node's data matches the value
+    if (root->data == value) {
+        return currentDepth;
+    }
     
-    return leftCount + rightCount + 1;
+    // Recursively search in the left subtree
+    int leftDepth = findDepth(root->left, value, currentDepth + 1);
+    if (leftDepth != -1) {
+        return leftDepth;
+    }
+    
+    // Recursively search in the right subtree
+    return findDepth(root->right, value, currentDepth + 1);
 }
 
 int main() {
@@ -42,11 +49,17 @@ int main() {
     root->right->left = createNode(15);
     root->right->right = createNode(25);
     
-    // Count the total number of nodes in the binary tree
-    int totalNodes = countNodes(root);
+    int valueToFind = 8;
     
-    // Print the total number of nodes
-    printf("Total number of nodes in the binary tree: %d\n", totalNodes);
+    // Find the depth of the specified node
+    int depth = findDepth(root, valueToFind, 0);
+    
+    // Print the depth of the node
+    if (depth != -1) {
+        printf("Depth of node with value %d: %d\n", valueToFind, depth);
+    } else {
+        printf("Node with value %d not found in the binary tree.\n", valueToFind);
+    }
     
     // Free allocated memory (not shown here for simplicity)
     // In a real application, you'd need to implement a function to free the tree nodes.
